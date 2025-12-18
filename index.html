@@ -104,7 +104,8 @@
       border: 1px solid #555;
     }
 
-    #christmas-text {
+    /* 文本容器样式（保持原视觉效果） */
+    .christmas-text-container {
       position: absolute;
       top: 10%;
       left: 50%;
@@ -120,13 +121,28 @@
       pointer-events: none;
       text-align: center;
       width: 100%;
+      transition: opacity 1s ease;
     }
 
+    /* To刘媛：显示3秒 → 淡出隐藏（总时长4秒） */
+    .fade-in-out {
+      animation: fadeInOut 4s forwards ease-in-out;
+    }
+
+    /* Merry Christmas：基础淡入动画（无延迟，通过JS控制触发） */
     .fade-in {
       animation: fadeInText 3s forwards ease-in-out;
-      animation-delay: 1s;
     }
 
+    /* To刘媛动画：0→1秒淡入 → 1→3秒保持显示 → 3→4秒淡出 */
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translate(-50%, -30%); }
+      25% { opacity: 1; transform: translate(-50%, -50%); }
+      75% { opacity: 1; transform: translate(-50%, -50%); }
+      100% { opacity: 0; transform: translate(-50%, -50%); }
+    }
+
+    /* Merry Christmas基础淡入动画 */
     @keyframes fadeInText {
       0% { opacity: 0; transform: translate(-50%, -30%); }
       100% { opacity: 1; transform: translate(-50%, -50%); }
@@ -144,7 +160,7 @@
     @media (max-width: 600px) {
       .modal-content { width: 90%; padding: 20px; }
       .modal-title { font-size: 1.5rem; }
-      #christmas-text { font-size: 2.5rem; top: 10%; }
+      .christmas-text-container { font-size: 2.5rem; top: 10%; }
     }
   </style>
 </head>
@@ -163,8 +179,10 @@
     </div>
   </div>
 
-  <div id="christmas-text">To 刘媛</div>
-  <div id="christmas-text">Merry Christmas</div>
+  <!-- 两个独立文本元素 -->
+  <div class="christmas-text-container" id="text-to">To 刘媛</div>
+  <div class="christmas-text-container" id="text-merry">Merry Christmas</div>
+  
   <audio id="christmas-music" loop>
     <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Dott/This_Christmas/Dott_-_01_-_This_Christmas.mp3" type="audio/mpeg">
     您的浏览器不支持音频元素。
@@ -552,7 +570,8 @@
     const modal = document.getElementById('start-modal');
     const btnYes = document.getElementById('btn-yes');
     const btnNo = document.getElementById('btn-no');
-    const textOverlay = document.getElementById('christmas-text');
+    const textTo = document.getElementById('text-to');
+    const textMerry = document.getElementById('text-merry');
     const christmasMusic = document.getElementById('christmas-music');
 
     btnNo.addEventListener('mouseenter', moveButton);
@@ -573,7 +592,13 @@
 
         setTimeout(() => {
             modal.style.display = 'none';
-            textOverlay.classList.add('fade-in');
+            // 1. 先触发To刘媛的显示+隐藏动画（总时长4秒）
+            textTo.classList.add('fade-in-out');
+            
+            // 2. 延迟4秒（To刘媛完全消失后），触发Merry Christmas的显示动画
+            setTimeout(() => {
+              textMerry.classList.add('fade-in');
+            }, 4000); // 4000毫秒 = To刘媛动画总时长
         }, 1000);
     });
 
@@ -590,5 +615,3 @@
   </script>
 </body>
 </html>
-</html>
-
