@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#02050b">
+  <meta name="description" content="冰蓝雪松和白色粒子螺旋。转动圣诞树，点开草帽一伙的十枚挂饰。">
+  <title>草帽一伙的圣诞树 · 桑尼号圣诞夜</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+  <script src="./ice-particles.js" defer></script>
+  <script src="./scene.js" defer></script>
+  <script src="./camera.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="page">
+    <header class="masthead">
+      <h1 class="deck-name">
+        <span class="hat-mark" aria-hidden="true"></span>
+        草帽一伙的圣诞树
+      </h1>
+      <div class="masthead-actions">
+        <button id="sound" class="round-button" type="button" title="开启音乐" aria-label="开启音乐" aria-pressed="false"><span class="music-icon" aria-hidden="true">♪</span></button>
+        <button id="present" class="round-button" type="button" title="全屏展示" aria-label="全屏展示" aria-pressed="false"><span class="frame-icon" aria-hidden="true"></span></button>
+      </div>
+    </header>
+
+    <main>
+      <section id="stage" class="stage" aria-label="旋转圣诞树" tabindex="0" aria-describedby="stage-help">
+        <canvas id="night" aria-hidden="true"></canvas>
+        <canvas id="ice-cloud" aria-hidden="true"></canvas>
+        <canvas id="tree" aria-hidden="true"></canvas>
+        <img id="tree-poster" class="tree-poster" src="./ice-poster.jpg" alt="" aria-hidden="true">
+        <div id="ornaments" class="ornaments" role="group" aria-label="船员挂饰"></div>
+      </section>
+      <div class="controls-area">
+        <p id="feedback" class="feedback" role="status" hidden></p>
+        <div class="controls">
+          <div class="tree-shapes" role="group" aria-label="圣诞树形态">
+            <button id="frost" class="pill" type="button" aria-pressed="true">冰晶</button>
+            <button id="spiral" class="pill" type="button" aria-pressed="false">螺旋</button>
+          </div>
+          <button id="scatter" class="pill" type="button" aria-pressed="false"><span class="spark-icon" aria-hidden="true">✦</span><span>散开</span></button>
+          <button id="crew-toggle" class="pill" type="button" aria-expanded="false" aria-controls="crew-gallery">挂饰</button>
+          <button id="camera" class="pill" type="button" aria-pressed="false" aria-controls="camera-panel"><span>手势</span></button>
+        </div>
+        <p class="stage-help" id="stage-help">拖动旋转 · 点击树上的亮点</p>
+      </div>
+      <aside class="camera-panel" id="camera-panel" hidden aria-label="手势控制">
+        <video id="camera-preview" muted playsinline hidden aria-label="本机摄像头预览"></video>
+        <div>
+          <p id="camera-status" role="status">正在开启手势控制</p>
+          <p class="gesture-help" id="gesture-help" hidden>张手散开 · 握拳聚合 · 捏合选挂饰</p>
+          <div id="camera-recovery" class="camera-recovery" hidden>
+            <p>在地址栏左侧打开站点设置，把「摄像头」改为「询问」或「允许」，再回来重试。</p>
+            <div class="camera-recovery-actions">
+              <button id="camera-retry" class="pill" type="button">重试授权</button>
+              <button id="camera-dismiss" class="pill" type="button">关闭</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <section class="crew" id="crew-gallery" aria-labelledby="crew-heading" hidden>
+      <div class="crew-header">
+        <h2 id="crew-heading">草帽一伙</h2>
+        <button class="round-button close-collection" id="close-collection" aria-label="关闭挂饰列表" type="button">×</button>
+      </div>
+      <div id="crew-list" class="crew-list" aria-label="船员挂饰"></div>
+    </section>
+  </div>
+
+  <dialog class="crew-dialog" id="crew-dialog" aria-labelledby="crew-name">
+    <article class="crew-card">
+      <button class="round-button close-card" id="close-card" aria-label="关闭祝福" type="button" autofocus>×</button>
+      <div id="crew-portrait" class="portrait featured" aria-hidden="true"></div>
+      <p id="crew-role" class="role"></p>
+      <h2 id="crew-name"></h2>
+      <p id="crew-message" class="blessing"></p>
+      <button class="pill" id="next-card" type="button">下一位伙伴</button>
+    </article>
+  </dialog>
+  <noscript>开启 JavaScript 后，就可以转动圣诞树和查看船员挂饰。</noscript>
+</body>
+</html>
