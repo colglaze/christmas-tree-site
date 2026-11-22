@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a1717">
+  <meta name="robots" content="noindex, nofollow">
+  <title>藏在树梢的信</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      color-scheme: dark;
+      --serif: "Songti SC", "STSong", "Noto Serif CJK SC", SimSun, Georgia, serif;
+      --sans: system-ui, "Microsoft YaHei", sans-serif;
+      --gold: #dfbc7b;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #eee3c9;
+      background: radial-gradient(ellipse at 47% 37%, #223630 0%, #102322 39%, #061113 83%);
+      font-family: var(--sans);
+    }
+    #starlight { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    main {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(1.4rem, 4vh, 2.5rem);
+      padding: max(2.5rem, env(safe-area-inset-top)) 1.25rem max(1.5rem, env(safe-area-inset-bottom));
+    }
+    details { position: relative; width: min(100%, 32rem); }
+    summary {
+      display: block;
+      width: 100%;
+      list-style: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary:focus-visible, .back:focus-visible { outline: 2px solid #f4d295; outline-offset: .4rem; border-radius: .3rem; }
+    .parcel { display: grid; justify-items: center; gap: 2.5rem; padding-top: .7rem; }
+    .envelope-art {
+      position: relative;
+      display: block;
+      width: min(91%, 28.5rem);
+      aspect-ratio: 1.62;
+      transform: rotate(-4deg);
+      background: linear-gradient(143deg, #e1c89d, #c0a071);
+      border: 1px solid #ad906d;
+      border-radius: .14rem;
+      box-shadow: 0 1.8rem 3rem #02080894, 0 .25rem .75rem #030b0b7d;
+      transition: transform .35s ease, box-shadow .35s ease;
+      isolation: isolate;
+    }
+    summary:hover .envelope-art, summary:focus-visible .envelope-art {
+      transform: translateY(-.25rem) rotate(-2deg);
+      box-shadow: 0 2.3rem 3.3rem #02080891, 0 0 2rem #eac17b14;
+    }
+    .envelope-art::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(34deg, transparent 49.5%, #b99c75 50%, transparent 50.5%) 0 100%/54% 57% no-repeat,
+        linear-gradient(-34deg, transparent 49.5%, #b99c75 50%, transparent 50.5%) 100% 100%/54% 57% no-repeat,
+        linear-gradient(154deg,#f0dfbb,#d9bd92);
+    }
+    .envelope-art::after, .paper::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .25;
+      background: repeating-linear-gradient(5deg, transparent 0 2px, #a58d6933 2px 3px, transparent 3px 6px);
+    }
+    .flap {
+      position: absolute;
+      inset: 0 0 35%;
+      background: #a08662;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+    }
+    .flap::after {
+      content: "";
+      position: absolute;
+      inset: 0 0 2px;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      background: linear-gradient(169deg,#f2e2be,#d8bd92 91%);
+    }
+    .seal {
+      position: absolute;
+      z-index: 1;
+      left: 50%;
+      top: 56%;
+      transform: translate(-50%,-50%) rotate(-5deg);
+      display: grid;
+      place-items: center;
+      width: 15%;
+      aspect-ratio: 1;
+      border-radius: 47% 50% 44% 46% / 47% 45% 52% 49%;
+      background: radial-gradient(ellipse at 33% 18%,#b65542,#8e342e 53%,#632427 88%);
+      box-shadow: inset 1px 2px 3px #f49a7470, inset -2px -2px 3px #4a171c99, 0 3px 4px #50312475;
+    }
+    .seal::before {
+      content: "";
+      position: absolute;
+      inset: 12%;
+      border-radius: 50%;
+      border: 1px solid #d798696f;
+      box-shadow: inset 1px 1px 2px #4d1d22, 0 1px 1px #d8916d88;
+    }
+    .seal::after {
+      content: "✧";
+      color: #efd29b;
+      font: 2rem/1 Georgia, serif;
+      text-shadow: 0 1px 2px #582222;
+    }
+    .addressee {
+      position: absolute;
+      right: 9%;
+      bottom: 12%;
+      color: #544430;
+      font: 500 clamp(1.05rem, 4vw, 1.45rem)/1.4 var(--serif);
+      letter-spacing: .22em;
+    }
+    .invitation {
+      padding: .5rem 1.35rem;
+      border-bottom: 1px solid #be995b88;
+      color: #edd1a1;
+      font-size: 1rem;
+      letter-spacing: .16em;
+    }
+    .fold-again { display: none; }
+    details[open] .parcel { display: none; }
+    details[open] summary {
+      position: absolute;
+      z-index: 2;
+      top: .65rem;
+      right: .65rem;
+      width: auto;
+      padding: .6rem .7rem;
+      color: #746242;
+      font-size: .84rem;
+    }
+    details[open] summary:focus-visible { outline-color: #865d39; }
+    details[open] .fold-again { display: inline; }
+    .paper {
+      position: relative;
+      padding: clamp(2.4rem, 8vw, 3.85rem) clamp(1.4rem, 7vw, 3.2rem) 2.3rem;
+      background: linear-gradient(122deg,#f7efdb,#ecdfbd);
+      border: 1px solid #e6d1a9;
+      box-shadow: 0 1.4rem 3.5rem #020a0a99;
+      color: #403b31;
+      font: 1.04rem/1.95 var(--serif);
+    }
+    details[open] .paper { animation: unfold .5s ease-out both; }
+    .paper::before {
+      content: "";
+      position: absolute;
+      inset: .48rem;
+      pointer-events: none;
+      border: 1px solid #baa2715e;
+    }
+    .paper > * { position: relative; z-index: 1; }
+    h1 { margin: 0 0 1rem; font: 600 clamp(1.4rem,5vw,1.9rem)/1.5 var(--serif); }
+    .paper p { margin: .9rem 0; }
+    .paper .confession {
+      margin: 1.3rem 0;
+      color: #8b3433;
+      font-size: clamp(1.65rem,6vw,2.2rem);
+      font-weight: 600;
+      letter-spacing: .08em;
+    }
+    .paper .closing { margin: 1rem 0 .1rem; text-align: right; color: #6a5842; }
+    .back { padding: .5rem .6rem; color: #d0beb0; text-underline-offset: .32em; font-size: .9rem; }
+    .back:hover { color: #f6dbad; }
+    @keyframes unfold {
+      from { opacity: 0; transform: translateY(.8rem) rotate(-1.4deg); }
+      to { opacity: 1; transform: none; }
+    }
+    @media (max-width: 440px) {
+      main { padding-inline: 1rem; }
+      .seal::after { font-size: 1.6rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="starlight" aria-hidden="true"></canvas>
+  <main>
+    <details id="envelope">
+      <summary id="open-letter">
+        <span class="parcel">
+          <span class="envelope-art" aria-hidden="true">
+            <span class="flap"></span>
+            <span class="seal"></span>
+            <span class="addressee">刘媛亲启</span>
+          </span>
+          <span class="invitation">拆开这封信</span>
+        </span>
+        <span class="fold-again">收好信纸</span>
+      </summary>
+      <article id="letter" class="paper" aria-labelledby="salutation">
+        <h1 id="salutation">刘媛，</h1>
+        <p>要是今年能许一个小愿望，我想和你一起去看灯。天刚暗就出门，沿着亮起来的那条路慢慢走。</p>
+        <p>其实去哪条街都好。我最期待的，是转过头时正好能看见你。</p>
+        <p class="confession">我喜欢你。</p>
+        <p>这句话藏在树上有一会儿了。很高兴，今晚拆开它的人是你。</p>
+        <p class="closing">圣诞快乐。</p>
+      </article>
+    </details>
+    <a class="back" href="./#tree">回到圣诞树</a>
+  </main>
+  <script>
+    (() => {
+      const canvas = document.getElementById("starlight");
+      const ink = canvas.getContext("2d");
+      if (!ink) return;
+      const motion = matchMedia("(prefers-reduced-motion: reduce)");
+      let width, height, frame, last = -100, time = 0;
+      const beads = Array.from({ length: 80 }, () => ({
+        x: Math.random(), y: Math.random(), radius: .5 + Math.random() ** 3 * 2.5,
+        phase: Math.random() * Math.PI * 2, drift: .5 + Math.random() * .5
+      }));
+      function draw(now) {
+        frame = 0;
+        if (now - last >= 32 || motion.matches) {
+          time += motion.matches ? 0 : Math.min((now - last) / 1000, .05);
+          last = now;
+          ink.clearRect(0, 0, width, height);
+          ink.fillStyle = "#f3cf8e";
+          for (const bead of beads) {
+            const x = bead.x * width + Math.sin(time * .14 + bead.phase) * 9;
+            const y = ((bead.y + time * .005 * bead.drift) % 1) * height;
+            ink.globalAlpha = .3 + .25 * Math.sin(time * .8 + bead.phase);
+            ink.beginPath();
+            ink.arc(x, y, bead.radius, 0, Math.PI * 2);
+            ink.fill();
+          }
+          ink.globalAlpha = 1;
+        }
+        if (!motion.matches && !document.hidden) frame = requestAnimationFrame(draw);
+      }
+      function resize() {
+        if (frame) cancelAnimationFrame(frame);
+        width = canvas.clientWidth;
+        height = canvas.clientHeight;
+        const scale = Math.min(1.75, devicePixelRatio || 1);
+        canvas.width = Math.round(width * scale);
+        canvas.height = Math.round(height * scale);
+        ink.setTransform(scale, 0, 0, scale, 0, 0);
+        last = -100;
+        draw(performance.now());
+      }
+      window.addEventListener("resize", resize);
+      motion.addEventListener?.("change", resize);
+      document.addEventListener("visibilitychange", resize);
+      resize();
+    })();
+  </script>
+</body>
+</html>
