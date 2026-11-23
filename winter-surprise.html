@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#091818">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="icon" href="data:,">
+  <title>十万分之一的圣诞来信</title>
+  <style>
+    :root { color-scheme: dark; font-family: "Songti SC", "STSong", SimSun, Georgia, serif; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; min-height: 100svh; display: grid; place-items: center;
+      padding: 2rem 1rem; text-align: center; color: #f1e6d1;
+      background: radial-gradient(ellipse at 50% 40%, #233d36, #102524 43%, #051112 87%);
+    }
+    main { position: relative; width: min(100%, 46rem); }
+    .stars { position: fixed; inset: 0; overflow: hidden; pointer-events: none; }
+    .stars i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #f0d294; box-shadow: 0 0 5px #e9af677a; }
+    .spark {
+      position: relative; display: block; height: 3.6rem; width: 3.6rem; margin: 0 auto 1.8rem;
+      background: radial-gradient(circle, #ffecb8 2%, #f1bf6649 15%, transparent 70%);
+    }
+    .spark::before, .spark::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(90deg, #b78f48, #fff6d6 50%, #bd964e);
+      clip-path: polygon(50% 0,55% 44%,100% 50%,55% 56%,50% 100%,45% 56%,0 50%,45% 44%);
+    }
+    .spark::after { transform: rotate(45deg) scale(.53); opacity: .65; }
+    h1 { margin: 0; font-size: clamp(1.23rem, 3.2vw, 1.85rem); font-weight: 500; letter-spacing: .12em; }
+    .odds { margin: .7rem 0 0; font: 400 clamp(3.1rem, 10.8vw, 7.5rem)/1.14 Georgia, serif; color: #efd194; text-shadow: 0 0 2.7rem #e4ba632c; white-space: nowrap; }
+    .caption, .trial, .delivery { font: .875rem/1.6 system-ui, sans-serif; }
+    .caption { margin: .45rem 0 0; color: #d5c3a0; letter-spacing: .11em; }
+    .trial { margin: .3rem 0 0; color: #decaa8; }
+    .note { margin: 2.1rem 0 1.5rem; font-size: clamp(1rem, 3vw, 1.2rem); line-height: 1.8; }
+    .receive {
+      display: inline-block; border: 1px solid #b3955e; border-radius: 3rem; padding: .65rem 1.8rem;
+      color: #f7e9c9; background: #dac1850c; font-size: 1rem; text-decoration: none;
+    }
+    .receive:hover, .receive:focus-visible { background: #dec18620; outline: 1px solid #efd49a; outline-offset: 3px; }
+    .delivery { margin-top: .85rem; color: #c3bca9; }
+    .delivery button { border: 0; background: transparent; color: inherit; font: inherit; text-decoration: underline; text-underline-offset: .23rem; cursor: pointer; }
+    @media (prefers-reduced-motion: no-preference) {
+      main { animation: reveal .8s ease-out both; }
+      @keyframes reveal { from { opacity: 0; transform: translateY(.45rem); } to { opacity: 1; transform: none; } }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars" aria-hidden="true"></div>
+  <main>
+    <span class="spark" aria-hidden="true"></span>
+    <h1 id="draw-heading">藏在圣诞树里的惊喜</h1>
+    <p class="odds">1 / 100,000</p>
+    <p class="caption">圣诞彩蛋的正式触发概率</p>
+    <p class="trial" id="trial-note" hidden>本次体验的抽中概率为 1 / 2</p>
+    <p class="note">有一封写给你的信，正从树梢落下来。</p>
+    <a id="receive-letter" class="receive" href="./winter-letter.html?v=surprise">现在收信</a>
+    <p class="delivery" id="delivery" hidden><span id="delivery-status">6 秒后自动送达</span> · <button type="button" id="pause">暂停</button></p>
+  </main>
+  <script>
+    (() => {
+      const trial = location.hash === "#trial-draw";
+      if (trial || location.hash === "#draw") {
+        document.getElementById("draw-heading").textContent = "你抽中了圣诞彩蛋";
+        document.getElementById("trial-note").hidden = !trial;
+      }
+      const sky = document.querySelector(".stars");
+      for (let n = 0; n < 66; n++) {
+        const star = document.createElement("i");
+        star.style.left = Math.random() * 100 + "%";
+        star.style.top = Math.random() * 100 + "%";
+        star.style.opacity = .18 + Math.random() * .55;
+        sky.append(star);
+      }
+      const link = document.getElementById("receive-letter");
+      const pauseButton = document.getElementById("pause");
+      const status = document.getElementById("delivery-status");
+      let remaining = 6000;
+      let started = null;
+      let timer;
+      let paused = false;
+      function deliver() { location.replace(link.href); }
+      function stop() {
+        clearTimeout(timer);
+        if (started !== null) remaining -= performance.now() - started;
+        started = null;
+      }
+      function start() {
+        if (paused || document.hidden || started !== null) return;
+        started = performance.now();
+        timer = setTimeout(deliver, Math.max(0, remaining));
+      }
+      link.addEventListener("click", event => {
+        if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        event.preventDefault(); stop(); deliver();
+      });
+      pauseButton.addEventListener("click", () => {
+        stop(); paused = !paused;
+        pauseButton.textContent = paused ? "继续" : "暂停";
+        status.textContent = paused ? "自动送达已暂停" : Math.max(1, Math.ceil(remaining / 1000)) + " 秒后自动送达";
+        start();
+      });
+      document.addEventListener("visibilitychange", () => document.hidden ? stop() : start());
+      addEventListener("pagehide", stop);
+      addEventListener("pageshow", start);
+      document.getElementById("delivery").hidden = false;
+      start();
+    })();
+  </script>
+</body>
+</html>

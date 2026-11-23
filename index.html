@@ -13,7 +13,8 @@
       if (navigation && navigation.type !== "navigate") return;
 
       const now = Date.now();
-      const trial = now >= Date.parse("2026-11-23T03:19:00Z") && now < Date.parse("2026-11-23T03:34:00Z");
+      const trial = new URLSearchParams(location.search).get("try") === "winter-surprise"
+        && now >= Date.parse("2026-11-23T07:29:00Z") && now < Date.parse("2026-11-23T08:00:00Z");
       const odds = trial ? 2 : 100000;
       const limit = Math.floor(2 ** 32 / odds) * odds;
       const word = new Uint32Array(1);
@@ -22,7 +23,7 @@
         crypto.getRandomValues(word);
       } while (word[0] >= limit);
       if (word[0] % odds === 0) {
-        location.replace(trial ? "./winter-letter.html#trial-draw" : "./winter-letter.html#draw");
+        location.replace(trial ? "./winter-surprise.html#trial-draw" : "./winter-surprise.html#draw");
         document.documentElement.hidden = true;
       }
     })();
