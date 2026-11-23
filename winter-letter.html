@@ -34,6 +34,22 @@
       padding: max(2.5rem, env(safe-area-inset-top)) 1.25rem max(1.5rem, env(safe-area-inset-bottom));
     }
     details { position: relative; width: min(100%, 32rem); }
+    .draw-result {
+      text-align: center;
+      color: #f9ecd5;
+    }
+    .draw-result h2 { margin: 0; font: 600 clamp(1.2rem, 4vw, 1.65rem)/1.4 var(--serif); }
+    .draw-result p { margin: .25rem 0 0; }
+    .odds {
+      display: block;
+      font: 500 clamp(2.9rem, 9.2vw, 4.7rem)/1.13 Georgia, var(--serif);
+      color: #f1cf8e;
+      font-variant-numeric: lining-nums tabular-nums;
+      text-shadow: 0 0 1.4rem #dda75038;
+      white-space: nowrap;
+    }
+    .odds-caption { display: block; margin-top: .28rem; color: #d6c4a1; font-size: .875rem; letter-spacing: .12em; }
+    main:has(#envelope[open]) .draw-result { display: none; }
     summary {
       display: block;
       width: 100%;
@@ -195,6 +211,10 @@
 <body>
   <canvas id="starlight" aria-hidden="true"></canvas>
   <main>
+    <header class="draw-result" id="draw-result">
+      <h2 id="draw-heading">圣诞彩蛋</h2>
+      <p aria-label="彩蛋触发概率：十万分之一"><strong class="odds">1 / 100,000</strong><span class="odds-caption">彩蛋触发概率</span></p>
+    </header>
     <details id="envelope">
       <summary id="open-letter">
         <span class="parcel">
@@ -220,6 +240,12 @@
   </main>
   <script>
     (() => {
+      if (location.hash === "#draw" || history.state?.winterLetterDraw === true) {
+        document.getElementById("draw-heading").textContent = "你抽中了圣诞彩蛋";
+        if (location.hash === "#draw") {
+          history.replaceState({ winterLetterDraw: true }, "", location.pathname + location.search);
+        }
+      }
       const canvas = document.getElementById("starlight");
       const ink = canvas.getContext("2d");
       if (!ink) return;

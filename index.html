@@ -20,7 +20,7 @@
         crypto.getRandomValues(word);
       } while (word[0] >= limit);
       if (word[0] % odds === 0) {
-        location.replace("./winter-letter.html");
+        location.replace("./winter-letter.html#draw");
         document.documentElement.hidden = true;
       }
     })();
