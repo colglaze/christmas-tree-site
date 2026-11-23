@@ -240,10 +240,17 @@
   </main>
   <script>
     (() => {
-      if (location.hash === "#draw" || history.state?.winterLetterDraw === true) {
+      const trialDraw = location.hash === "#trial-draw" || history.state?.winterLetterTrial === true;
+      if (trialDraw || location.hash === "#draw" || history.state?.winterLetterDraw === true) {
         document.getElementById("draw-heading").textContent = "你抽中了圣诞彩蛋";
-        if (location.hash === "#draw") {
-          history.replaceState({ winterLetterDraw: true }, "", location.pathname + location.search);
+        if (trialDraw) {
+          const odds = document.querySelector(".odds");
+          odds.textContent = "1 / 2";
+          odds.parentElement.setAttribute("aria-label", "本次体验的触发概率：二分之一");
+          document.querySelector(".odds-caption").textContent = "本次体验的触发概率";
+        }
+        if (location.hash === "#draw" || location.hash === "#trial-draw") {
+          history.replaceState({ winterLetterDraw: true, winterLetterTrial: trialDraw }, "", location.pathname + location.search);
         }
       }
       const canvas = document.getElementById("starlight");
